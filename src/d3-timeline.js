@@ -2,6 +2,7 @@
 (function () {
   d3.timeline = function() {
     var DISPLAY_TYPES = ["circle", "rect"];
+    var PATH_DISPLAY_TYPES = ["cross", "diamond", "square", "triangle-down", "triangle-up"];
 
     var hover = function () {},
         mouseover = function () {},
@@ -246,21 +247,64 @@
 
           if (backgroundColor) { appendBackgroundBar(yAxisMapping, index, g, data, datum); }
 
+          // g.selectAll("svg").data(data).enter()
+          //   .append(function(d, i) {
+          //       return document.createElementNS(d3.ns.prefix.svg, "display" in d? d.display:display);
+          //   })
+          //   .attr("x", getXPos)
+          //   .attr("y", getStackPosition)
+          //   .attr("width", function (d, i) {
+          //     return (d.ending_time - d.starting_time) * scaleFactor;
+          //   })
+          //   .attr("cy", function(d, i) {
+          //       return getStackPosition(d, i) + itemHeight/2;
+          //   })
+          //   .attr("cx", getXPos)
+          //   .attr("r", itemHeight / 2)
+          //   .attr("height", itemHeight)
+
           g.selectAll("svg").data(data).enter()
             .append(function(d, i) {
-                return document.createElementNS(d3.ns.prefix.svg, "display" in d? d.display:display);
+              var currentDisplaySetting = "display" in d ? d.display : display;
+              return document.createElementNS(d3.ns.prefix.svg, (DISPLAY_TYPES.indexOf(currentDisplaySetting) > -1) ? currentDisplaySetting : "path");
             })
-            .attr("x", getXPos)
-            .attr("y", getStackPosition)
-            .attr("width", function (d, i) {
-              return (d.ending_time - d.starting_time) * scaleFactor;
+            .attr("d", d3.svg.symbol().type(function(d) {
+              return d.display;
+            }).size(function(d) {
+              return "symbol_size" in d ? d.symbol_size : ((itemHeight * itemHeight) / 2);
+            }))
+            .attr("transform", function(d, i) {
+              var currentDisplaySetting = "display" in d ? d.display : display;
+              return (PATH_DISPLAY_TYPES.indexOf(currentDisplaySetting) > -1) ? "translate(" + getXPos(d, i) + "," + (+getStackPosition(d, i) + 10) + ")" : null;
+            })
+            .attr("x", function(d, i) {
+              var currentDisplaySetting = "display" in d ? d.display : display;
+              return (DISPLAY_TYPES.indexOf(currentDisplaySetting) > -1) ? getXPos(d, i) : null;
+            })
+            .attr("y", function(d, i) {
+              var currentDisplaySetting = "display" in d ? d.display : display;
+              return (DISPLAY_TYPES.indexOf(currentDisplaySetting) > -1) ? getStackPosition(d, i) : null;
+            })
+            .attr("width", function(d, i) {
+              var currentDisplaySetting = "display" in d ? d.display : display;
+              return (DISPLAY_TYPES.indexOf(currentDisplaySetting) > -1) ? ((d.ending_time - d.starting_time) * scaleFactor) : null;
             })
             .attr("cy", function(d, i) {
-                return getStackPosition(d, i) + itemHeight/2;
+              var currentDisplaySetting = "display" in d ? d.display : display;
+              return (DISPLAY_TYPES.indexOf(currentDisplaySetting) > -1) ? (getStackPosition(d, i) + itemHeight / 2) : null;
             })
-            .attr("cx", getXPos)
-            .attr("r", itemHeight / 2)
-            .attr("height", itemHeight)
+            .attr("cx", function(d, i) {
+              var currentDisplaySetting = "display" in d ? d.display : display;
+              return (DISPLAY_TYPES.indexOf(currentDisplaySetting) > -1) ? getXPos(d, i) : null;
+            })
+            .attr("r", function(d, i) {
+              var currentDisplaySetting = "display" in d ? d.display : display;
+              return (DISPLAY_TYPES.indexOf(currentDisplaySetting) > -1) ? itemHeight / 2 : null;
+            })
+            .attr("height", function(d, i) {
+              var currentDisplaySetting = "display" in d ? d.display : display;
+              return (DISPLAY_TYPES.indexOf(currentDisplaySetting) > -1) ? itemHeight : null;
+            })
             .style("fill", function(d, i){
               var dColorPropName;
               if (d.color) return d.color;

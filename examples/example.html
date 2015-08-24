@@ -30,7 +30,7 @@
       -o-transform: translate(0px,40px); /* Opera */
       -moz-transform: translate(0px,40px); /* Firefox */
     }
-    
+
     .coloredDiv {
       height:20px; width:20px; float:left;
     }
@@ -51,6 +51,20 @@
         {times: [{"starting_time": 1355761910000, "ending_time": 1355763910000}]},
       ];
 
+      var rectAndCrossTestData = [
+        {times: [{"starting_time": 1355752800000,
+                 "display": "cross"}, {"starting_time": 1355767900000, "ending_time": 1355774400000, "display": "circle"}]},
+        {times: [{"starting_time": 1355759910000,
+        "display":"diamond"}, ]},
+        {times: [{"starting_time": 1355761910000, "ending_time": 1355763910000}]},
+        {times: [{"starting_time": 1355759910000,
+        "display":"triangle-up"}, ]},
+        {times: [{"starting_time": 1355759910000,
+        "display":"triangle-down"}, ]},
+        {times: [{"starting_time": 1355767900000, "ending_time": 1355774400000,
+        "display":"square"}]}
+      ];
+
       var labelTestData = [
         {label: "person a", times: [{"starting_time": 1355752800000, "ending_time": 1355759900000}, {"starting_time": 1355767900000, "ending_time": 1355774400000}]},
         {label: "person b", times: [{"starting_time": 1355759910000, "ending_time": 1355761900000}, ]},
@@ -59,7 +73,7 @@
 
       var iconTestData = [
         {class:"jackie", icon: "jackie.png", times: [
-          {"starting_time": 1355752800000, "ending_time": 1355759900000}, 
+          {"starting_time": 1355752800000, "ending_time": 1355759900000},
           {"starting_time": 1355767900000, "ending_time": 1355774400000}]},
         {class:"troll", icon: "troll.png", times: [
           {"starting_time": 1355759910000, "ending_time": 1355761900000,
@@ -104,7 +118,7 @@
         var svg = d3.select("#timeline1").append("svg").attr("width", width)
           .datum(testData).call(chart);
       }
-      
+
       function timelineRectNoAxis() {
         var chart = d3.timeline().showTimeAxis();
 
@@ -130,6 +144,13 @@
 
         var svg = d3.select("#timeline2_combine").append("svg").attr("width", width)
           .datum(rectAndCircleTestData).call(chart);
+      }
+
+      function timelineRectAndCross() {
+        var chart = d3.timeline().stack().itemHeight(20);
+
+        var svg = d3.select("#timeline2_combine").append("svg").attr("width", width)
+          .datum(rectAndCrossTestData).call(chart);
       }
 
       function timelineHover() {
@@ -206,9 +227,9 @@
           .domain(['apple','orange','lemon']);
         var chart = d3.timeline()
           .colors( colorScale )
-          .colorProperty('fruit');      
+          .colorProperty('fruit');
         var svg = d3.select("#timelineColorsPerTime").append("svg").attr("width", width)
-          .datum(testDataWithColorPerTime).call(chart);  
+          .datum(testDataWithColorPerTime).call(chart);
       }
 
       function timelineRelativeTime() {
@@ -271,21 +292,22 @@
             .datum(labelTestData).call(chart);
       }
 
-      timelineRect();
-      timelineRectNoAxis();
-      timelineCircle();
-      timelineRectAndCircle();
-      timelineHover();
-      timelineStackedIcons();
-      timelineLabelColor();
-      timelineRotatedTicks();
-      timelineRectColors();
-      timelineRectColorsPerTime();
-      timelineRelativeTime();
-      timelineAxisTop();
-      timelineBgndTick();
-      timelineBgnd();
-      timelineComplex();
+      //timelineRect();
+      //timelineRectNoAxis();
+    //  timelineCircle();
+    //  timelineRectAndCircle();
+      timelineRectAndCross();
+      // timelineHover();
+      // timelineStackedIcons();
+      // timelineLabelColor();
+      // timelineRotatedTicks();
+      // timelineRectColors();
+      // timelineRectColorsPerTime();
+      // timelineRelativeTime();
+      // timelineAxisTop();
+      // timelineBgndTick();
+      // timelineBgnd();
+      // timelineComplex();
     }
   </script>
 </head>
